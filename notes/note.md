@@ -143,3 +143,160 @@ y^2 = x^3 + 7
   * A + B = B + A
 * 可逆性
   * (A + B) + C = A + (B + C)
+
+## 3章: 楕円曲線暗号
+
+2章の楕円曲線は実数。実数が体の１つ。
+
+実数は無数にあるが、有限体と同じような性質を持つ。
+
+### 有限体上の楕円曲線
+
+F103 で <img src="https://latex.codecogs.com/svg.image?{\displaystyle&space;y^{2}=x^{3}&plus;7}" title="{\displaystyle y^{2}=x^{3}+7}" />
+ (`y^2 = x^3 + 7`) の曲線で、点(17, 64)が曲線上にあることを証明するには
+
+```
+y^2 = 64^2 % 103 = 79
+x^3 + 7 = (17^3 + 7) % 103 = 79
+```
+
+> <img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Elliptic_curve_on_Z61.svg/360px-Elliptic_curve_on_Z61.svg.png" decoding="async" width="360" height="222" class="thumbimage" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Elliptic_curve_on_Z61.svg/540px-Elliptic_curve_on_Z61.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Elliptic_curve_on_Z61.svg/720px-Elliptic_curve_on_Z61.svg.png 2x" data-file-width="987" data-file-height="610">
+>
+> 有限体 F61 上の楕円曲線 y2 = x3 − x のアフィン点の集合
+>
+> <img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Elliptic_curve_on_Z89.svg/360px-Elliptic_curve_on_Z89.svg.png" decoding="async" width="360" height="222" class="thumbimage" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Elliptic_curve_on_Z89.svg/540px-Elliptic_curve_on_Z89.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Elliptic_curve_on_Z89.svg/720px-Elliptic_curve_on_Z89.svg.png 2x" data-file-width="987" data-file-height="610">
+>
+> 有限群 F89 上の楕円曲線 y2 = x3 − x のアフィン点の集合
+>
+> [楕円曲線#有限体上の楕円曲線 - Wikipedia](https://ja.wikipedia.org/wiki/%E6%A5%95%E5%86%86%E6%9B%B2%E7%B7%9A#%E6%9C%89%E9%99%90%E4%BD%93%E4%B8%8A%E3%81%AE%E6%A5%95%E5%86%86%E6%9B%B2%E7%B7%9A)
+
+### 有限体における点の加算
+
+普通にできる。
+
+* [楕円曲線暗号#楕円曲線上の加算 - Wikipedia](https://ja.wikipedia.org/wiki/%E6%A5%95%E5%86%86%E6%9B%B2%E7%B7%9A%E6%9A%97%E5%8F%B7#%E6%A5%95%E5%86%86%E6%9B%B2%E7%B7%9A%E4%B8%8A%E3%81%AE%E5%8A%A0%E7%AE%97)
+
+F223 で <img src="https://latex.codecogs.com/svg.image?{\displaystyle&space;y^{2}=x^{3}&plus;7}" title="{\displaystyle y^{2}=x^{3}+7}" />
+ (`y^2 = x^3 + 7`) の曲線上で以下を計算する
+
+* (170,142) + (60,139)
+* (47,71) + (17,56)
+* (143,98) + (76,66)
+
+```py
+prime = 223
+a = FieldElement(0, prime)
+b = FieldElement(7, prime)
+
+# (170,142) + (60,139)
+x1 = FieldElement(num=170, prime=prime)
+y1 = FieldElement(num=142, prime=prime)
+x2 = FieldElement(num=60, prime=prime)
+y2 = FieldElement(num=139, prime=prime)
+p1 = Point(x1, y1, a, b)
+p2 = Point(x2, y2, a, b)
+print(p1+p2) # => Point(220,181)_0_7 FieldElement(223)
+
+# (47,71) + (17,56)
+x1 = FieldElement(num=47, prime=prime)
+y1 = FieldElement(num=71, prime=prime)
+x2 = FieldElement(num=17, prime=prime)
+y2 = FieldElement(num=56, prime=prime)
+p1 = Point(x1, y1, a, b)
+p2 = Point(x2, y2, a, b)
+print(p1+p2) # => Point(215,68)_0_7 FieldElement(223)
+
+# (143,98) + (76,66)
+x1 = FieldElement(num=143, prime=prime)
+y1 = FieldElement(num=98, prime=prime)
+x2 = FieldElement(num=76, prime=prime)
+y2 = FieldElement(num=66, prime=prime)
+p1 = Point(x1, y1, a, b)
+p2 = Point(x2, y2, a, b)
+print(p1+p2) # => Point(47,71)_0_7 FieldElement(223)
+```
+
+> ![./images/1.png](./images/1.png)
+>
+> [クラウドを支えるこれからの暗号技術](https://herumi.github.io/ango/)
+
+### 楕円曲線のスカラー倍算
+
+同じ点の加算ができる。
+
+```
+(170, 142) + (170, 142) = 2 * (170, 142)
+```
+
+結合性がある。
+
+```
+2 * (170, 142) + (170, 142) = 3 * (170, 142)
+```
+
+> 楕円曲線上の点と点を掛けるのではなく、点に整数（スカラー）を掛けることに注意。
+>
+> [楕円曲線暗号#スカラー倍算 - Wikipedia](https://ja.wikipedia.org/wiki/%E6%A5%95%E5%86%86%E6%9B%B2%E7%B7%9A%E6%9A%97%E5%8F%B7#%E3%82%B9%E3%82%AB%E3%83%A9%E3%83%BC%E5%80%8D%E7%AE%97)
+
+スカラー倍算の特性の一つに、計算をせず予測することが非常に難しいという点がある。
+
+> キャラクターの一歩が P だとします．原点から 2 歩進むと 2P の位置にいます．どんどん進んで端に到達すると逆から出てきます．10 歩でも 100 歩でも 10100 歩でも進めます．そして歩いて到達した位置 10P や 100P，10100P は容易に求められます．
+>
+> さて，移動していたキャラクターはうっかり何歩歩いていたか忘れてしまいました．現在地と自分の一歩から何歩歩いたのか知りたいのです．実はこれはとても難しいことが知られています．一歩 P が決まっているときに
+>
+> 歩数 n から現在地 nP を求められる ↭ 現在地 nP から n を求められない
+>
+> 有限体のときと同じく，この非対称性が重要です．
+>
+> 「P, nP が与えられたときに n を求めよ．」
+>
+> という問題を楕円離散対数問題（ECDLP : Elliptic Curve DLP）といいます．
+>
+> [クラウドを支えるこれからの暗号技術](https://herumi.github.io/ango/)
+
+
+点Gを無限遠点になるまでスカラー倍数する
+
+n*G = 0のとき {G, 2G, 3G, ... nG}
+
+この集合を群と呼ぶ。この集合は n が有限のため、有限群(有限巡回群)になる。
+
+F223で (47,71) のスカラー倍算をしていく。
+
+```py
+from ecc import FieldElement, Point
+prime = 223
+a = FieldElement(0, prime)
+b = FieldElement(7, prime)
+x = FieldElement(47, prime)
+y = FieldElement(71, prime)
+p = Point(x, y, a, b)
+for s in range(1,21):
+    result = s*p
+    print('{}*(47,71)=({},{})'.format(s,result.x.num,result.y.num))
+```
+
+```text
+1*(47,71)=(47,71)
+2*(47,71)=(36,111)
+3*(47,71)=(15,137)
+4*(47,71)=(194,51)
+5*(47,71)=(126,96)
+6*(47,71)=(139,137)
+7*(47,71)=(92,47)
+8*(47,71)=(116,55)
+9*(47,71)=(69,86)
+10*(47,71)=(154,150)
+11*(47,71)=(154,73)
+12*(47,71)=(69,137)
+13*(47,71)=(116,168)
+14*(47,71)=(92,176)
+15*(47,71)=(139,86)
+16*(47,71)=(126,127)
+17*(47,71)=(194,172)
+18*(47,71)=(15,86)
+19*(47,71)=(36,112)
+20*(47,71)=(47,152)
+```
+
+21*(47,71)は無限遠点になり、22*(47,71) = (47,71)となる。
