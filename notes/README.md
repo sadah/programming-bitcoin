@@ -160,11 +160,11 @@ y^2 = 64^2 % 103 = 79
 x^3 + 7 = (17^3 + 7) % 103 = 79
 ```
 
-> <img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Elliptic_curve_on_Z61.svg/360px-Elliptic_curve_on_Z61.svg.png" decoding="async" width="360" height="222" class="thumbimage" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Elliptic_curve_on_Z61.svg/540px-Elliptic_curve_on_Z61.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Elliptic_curve_on_Z61.svg/720px-Elliptic_curve_on_Z61.svg.png 2x" data-file-width="987" data-file-height="610">
+> <img alt="" src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Elliptic_curve_on_Z61.svg">
 >
 > 有限体 F61 上の楕円曲線 y2 = x3 − x のアフィン点の集合
 >
-> <img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Elliptic_curve_on_Z89.svg/360px-Elliptic_curve_on_Z89.svg.png" decoding="async" width="360" height="222" class="thumbimage" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Elliptic_curve_on_Z89.svg/540px-Elliptic_curve_on_Z89.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Elliptic_curve_on_Z89.svg/720px-Elliptic_curve_on_Z89.svg.png 2x" data-file-width="987" data-file-height="610">
+> <img alt="" src="https://upload.wikimedia.org/wikipedia/commons/f/f4/Elliptic_curve_on_Z89.svg">
 >
 > 有限群 F89 上の楕円曲線 y2 = x3 − x のアフィン点の集合
 >
@@ -301,6 +301,36 @@ for s in range(1,21):
 
 21*(47,71)は無限遠点になり、22*(47,71) = (47,71)となる。
 
+#### 2進展開 / バイナリ法
+
+log2(n)回のループで乗算が実行可能になる。
+
+```py
+def rmul(self, coefficient):
+    coef = coefficient
+    current = self  # <1>
+    result = 0  # <2>
+    print(bin(coef), current, result)
+    while coef:
+        if coef & 1:  # <3>
+            result += current
+        current += current  # <4>
+        coef >>= 1  # <5>
+        print(bin(coef), current, result)
+    return result
+
+print(rmul(10,11))
+```
+
+```text
+0b1011 10 0
+0b101  20 10
+0b10   40 30
+0b1    80 30
+0b0   160 110
+110
+```
+
 ### 有限巡回群
 
 有限体上の楕円曲線から生成元となる点を取り出すと、有限巡回群を生成できる。
@@ -342,3 +372,17 @@ gy = 0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8
 p = 2**256 - 2**32 - 977
 n = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141
 ```
+
+### 公開鍵暗号
+
+```text
+P = eG
+```
+
+PはeとGの値がわかればすぐに計算できる。eの値はPとGがわかっていても簡単には計算できない。
+
+一般に `eを秘密鍵`、`Pを公開鍵`と呼ぶ。
+
+秘密鍵は256bitの数で、公開鍵は座標 (x, y) で、xとyはそれぞれ256bitの数。
+
+### 署名と検証
