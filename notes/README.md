@@ -369,8 +369,8 @@ print(rmul(10,11))
 ```py
 gx = 0x79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798
 gy = 0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8
-p = 2**256 - 2**32 - 977
-n = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141
+p  = 2**256 - 2**32 - 977
+n  = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141
 ```
 
 ### 公開鍵暗号
@@ -386,3 +386,80 @@ PはeとGの値がわかればすぐに計算できる。eの値はPとGがわ�
 秘密鍵は256bitの数で、公開鍵は座標 (x, y) で、xとyはそれぞれ256bitの数。
 
 ### 署名と検証
+
+楕円曲線デジタル署名アルゴリズム (Elliptic Curve Digital Signature Algorithm)
+
+* [楕円曲線DSA - Wikipedia](https://ja.wikipedia.org/wiki/%E6%A5%95%E5%86%86%E6%9B%B2%E7%B7%9ADSA)
+
+秘密の乗法は、以下を満たす e。
+
+```text
+eG = P
+```
+
+Pが公開鍵で、eは秘密鍵。
+
+ランダムな256bitの数字kで↓を計算する。
+
+```text
+kG = R
+```
+
+Rのx座標に注目し、これをrとする。
+
+離散対数問題の方程式
+
+```text
+uG + vP = kG
+```
+
+u, vは 0 ではない値を署名者が選ぶ。
+
+```text
+uG + vP = kG
+vP = (k-u)G
+```
+
+v != 0であるため、vで割る
+
+```text
+P = ((k-u)/v)G
+```
+
+すなわち `e = (k-u)/v` となるので、これを満たす u, v の組み合わせを選ぶ。
+
+eを知らない場合、`e = (k-u)/v`になるまでいろいろ試す必要がある。
+
+離散対数問題は難しいので、e, u, vは定めた人が知っていると考えられる。
+
+### 署名ハッシュ
+
+署名ハッシュを z とする。 r と s が署名
+
+```text
+u = z/s, v = r/s
+```
+
+これを解くために s の値を求める。
+
+```text
+uG + vP = R = kG
+```
+
+`eG = P` なので
+
+
+```text
+uG + veG = kG
+u + ve = k
+```
+
+`u = z/s, v = r/s` なので
+
+```text
+z/s + re/s = k
+(z + re) / s = k
+s = (z + re) / k
+```
+
+kが明かされると、いろいろ無駄になるので、ｋには完全にランダムな値を使う。
