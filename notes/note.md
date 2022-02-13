@@ -77,3 +77,69 @@ n^(p-1) % p = 1
 [合同式(mod)の意味とよく使う６つの性質 | 高校数学の美しい物語](https://manabitimes.jp/math/683)
 
 [フェルマーの小定理の証明と例題 | 高校数学の美しい物語](https://manabitimes.jp/math/680)
+
+## 楕円曲線
+
+### 定義
+
+<img src="https://latex.codecogs.com/svg.image?{\displaystyle&space;y^{2}=x^{3}&plus;ax&plus;b}" title="{\displaystyle y^{2}=x^{3}+ax+b}" />
+
+```text
+y^2 = x^3 + a*x + b
+```
+
+#### secq256k1
+
+```text
+y^2 = x^3 + 7
+```
+
+<img src="https://latex.codecogs.com/svg.image?{\displaystyle&space;y^{2}=x^{3}&plus;7}" title="{\displaystyle y^{2}=x^{3}+7}" />
+
+### 点の加算
+
+> 楕円曲線E上に位置する2点 <img src="https://latex.codecogs.com/svg.image?{\displaystyle P_{\!A}\,(x_{1},\,y_{1}),\,P_{\!B}\,(x_{2},\,y_{2})}P_{{\!A}}\,(x_{1},\,y_{1}),\,P_{{\!B}}\,(x_{2},\,y_{2})"> の加算は以下の通りである。
+>
+> まず、無限遠点を <img src="https://latex.codecogs.com/svg.image?{\displaystyle O}"> とすると、 <img src="https://latex.codecogs.com/svg.image?{\displaystyle P_{\!A}+O=O+P_{\!A}=P_{\!A}}"> である。すなわち、 <img src="https://latex.codecogs.com/svg.image?{\displaystyle O}"> が単位元である。
+>
+> もし <img src="https://latex.codecogs.com/svg.image?{\displaystyle x_{1}=x_{2},y_{1}=-y_{2}}"> ならば、<img src="https://latex.codecogs.com/svg.image?{\displaystyle P_{\!A}+P_{\!B}=O}"> である。
+>
+>
+> それ以外の場合、<img src="https://latex.codecogs.com/svg.image?{\displaystyle P_{\!C}=P_{\!A}+P_{\!B}}P_{{\!C}}=P_{{\!A}}+P_{{\!B}}"> は、2点 <img src="https://latex.codecogs.com/svg.image?{\displaystyle P_{\!A},\,P_{\!B}}P_{{\!A}},\,P_{{\!B}}"> を通る直線とEとの（<img src="https://latex.codecogs.com/svg.image?{\displaystyle P_{\!A}}P_{{\!A}}"> および <img src="https://latex.codecogs.com/svg.image?{\displaystyle P_{\!B}}P_{{\!B}}"> と異なる）交点の、y座標の符号を反転したものである。すなわち <img src="https://latex.codecogs.com/svg.image?{\displaystyle P_{\!C}\,(x_{3},\,y_{3})}P_{{\!C}}\,(x_{3},\,y_{3})"> は以下のようになる。
+>
+> <img src="https://latex.codecogs.com/svg.image?{\displaystyle x_{3}=\phi ^{2}-x_{1}-x_{2},}">
+>
+> <img src="https://latex.codecogs.com/svg.image?{\displaystyle y_{3}=-\phi x_{3}-\psi .}">
+>
+> ただし <img src="https://latex.codecogs.com/svg.image?{\displaystyle \phi ,\,\psi }"> は
+>
+> <img src="https://latex.codecogs.com/svg.image?{\displaystyle \phi ={\frac {y_{2}-y_{1}}{x_{2}-x_{1}}},}">
+>
+> <img src="https://latex.codecogs.com/svg.image?{\displaystyle \psi ={\frac {y_{1}x_{2}-y_{2}x_{1}}{x_{2}-x_{1}}}.}">
+>
+> [楕円曲線暗号 - Wikipedia](https://ja.wikipedia.org/wiki/%E6%A5%95%E5%86%86%E6%9B%B2%E7%B7%9A%E6%9A%97%E5%8F%B7)
+
+> と、言葉だけで説明するといまいち良く分からないですね。というか無限遠点って何だ。
+>
+> とりあえず無限遠点のことは置いといて、無限遠点じゃない点に関しての加法演算を視覚化してみます。
+>
+> <img class="aligncenter size-full wp-image-79296" src="https://techracho.bpsinc.jp/wp-content/uploads/2019/08/elliptic_curve_additive_group.png" alt="" width="300">
+>
+> P と Q を通る直線と楕円曲線の新たな交点の y 座標を反転した点 R' が一意に定まることが分かるでしょうか。
+>
+> 一方で、上図の R と R' のように、x軸に対称な2点に加法演算を適用した場合、直線と楕円曲線は新たな交点を作らないので、楕円曲線上の一意な点を作れません。このような場合に解なしとしてしまうと加算群が作れなくなってしまうので、無限遠点が導入されます。
+>
+> [楕円曲線暗号アルゴリズムを理解する｜TechRacho by BPS株式会社](https://techracho.bpsinc.jp/yoshi/2019_08_16/79280)
+
+#### 数学的解説
+
+* 同一性
+  * 単位元があること
+  * A + I = Aとなる点Iが存在する
+  * この点を *無限遠点* と呼ぶ
+* 可換性
+  * A + (-A) = I
+* 結合性
+  * A + B = B + A
+* 可逆性
+  * (A + B) + C = A + (B + C)
