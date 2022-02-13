@@ -137,11 +137,11 @@ y^2 = x^3 + 7
   * 単位元があること
   * A + I = Aとなる点Iが存在する
   * この点を *無限遠点* と呼ぶ
-* 可換性
-  * A + (-A) = I
-* 結合性
-  * A + B = B + A
 * 可逆性
+  * A + (-A) = I
+* 可換性
+  * A + B = B + A
+* 結合性
   * (A + B) + C = A + (B + C)
 
 ## 3章: 楕円曲線暗号
@@ -300,3 +300,45 @@ for s in range(1,21):
 ```
 
 21*(47,71)は無限遠点になり、22*(47,71) = (47,71)となる。
+
+### 有限巡回群
+
+有限体上の楕円曲線から生成元となる点を取り出すと、有限巡回群を生成できる。
+
+体とは異なり、群にある演算は点の加算のみ。
+
+群には、閉包、可逆性、可換性、結合性などの特性もある。
+
+* 同一性
+  * 単位元があること
+  * 0 + A = Aとなる点Iが存在する
+  * この点を *無限遠点* と呼ぶ
+* 閉包
+  * aG + bG = (a + b)G
+* 可逆性
+  * aGが群にある場合、(n - a)Gも群にある
+  * aG + (n - a)G = (a + n -a) = nG = 0
+* 可換性
+  * A + B = B + A
+* 結合性
+  * (A + B) + C = A + (B + C)
+
+### ビットコイン用の曲線の定義
+
+* 曲線
+  * <img src="https://latex.codecogs.com/svg.image?{\displaystyle&space;y^{2}=x^{3}&plus;7}" title="{\displaystyle y^{2}=x^{3}+7}" />
+  * `y^2 = x^3 + 7`
+* 有限体の素数p
+  * `p = 2**256 - 2**32 - 977`
+* 生成点Gのx, y座標
+  * `gx = 0x79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798`
+  * `gy = 0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8`
+* Gにより生成される群の位数
+  * `0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141`
+
+```py
+gx = 0x79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798
+gy = 0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8
+p = 2**256 - 2**32 - 977
+n = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141
+```
