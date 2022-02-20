@@ -700,3 +700,16 @@ SECフォーマットを直接使わないことで、アドレスを 33byte か
 4. 3に hash256 を行い最初の4byteを取得
     * チェックサム
 5. 3と4を結合して、Base58でエンコードする
+
+### WIF (Wallet Import Format)
+
+* [Wallet import format - Bitcoin Wiki](https://en.bitcoin.it/wiki/Wallet_import_format)
+
+WIFの作成方法
+
+1. メインネットの秘密鍵は 0x80、テストネットの秘密鍵は 0xef のプレフィクス
+2. 秘密鍵を32byteのビッグエンディアンでエンコードする
+3. 公開鍵アドレスのSECフォーマットが圧縮形式の場合は、末尾に 0x01 を追加
+4. 1, 2, 3 の順に結合
+5. 4 に hash256 して最初の 4byte を取得
+6. 4, 5を結合させて、Base58にエンコード
