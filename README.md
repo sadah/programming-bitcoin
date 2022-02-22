@@ -27,6 +27,15 @@ The original is [here](https://github.com/jimmysong/programmingbitcoin)
       - [署名ハッシュ](#署名ハッシュ)
       - [検証](#検証)
     - [署名の作成](#署名の作成)
+  - [4章: シリアライズ](#4章-シリアライズ)
+    - [非圧縮SECフォーマット](#非圧縮secフォーマット)
+    - [圧縮SECフォーマット](#圧縮secフォーマット)
+      - [x座標からy座標の求め方](#x座標からy座標の求め方)
+    - [パース](#パース)
+    - [DER署名](#der署名)
+    - [Bas58](#bas58)
+    - [アドレス形式](#アドレス形式)
+    - [WIF (Wallet Import Format)](#wif-wallet-import-format)
 
 ## 1章: 有限体
 
