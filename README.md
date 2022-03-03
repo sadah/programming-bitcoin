@@ -36,6 +36,12 @@ The original is [here](https://github.com/jimmysong/programmingbitcoin)
     - [Bas58](#bas58)
     - [アドレス形式](#アドレス形式)
     - [WIF (Wallet Import Format)](#wif-wallet-import-format)
+  - [5章: トランザクション](#5章-トランザクション)
+    - [Version](#version)
+    - [Inputs](#inputs)
+    - [Outputs](#outputs)
+    - [Locktime](#locktime)
+    - [トランザクション手数料](#トランザクション手数料)
 
 ## 1章: 有限体
 
@@ -720,3 +726,77 @@ WIFの作成方法
 4. 1, 2, 3 の順に結合
 5. 4 に hash256 して最初の 4byte を取得
 6. 4, 5を結合させて、Base58にエンコード
+
+## 5章: トランザクション
+
+トランザクションは4つのコンポーネントで構成される
+
+1. Version
+2. Inputs
+3. Outputs
+4. Locktime
+
+### Version
+
+トランザクションのバージョンは通常 1
+
+`01000000` でリトルエンディアンの整数
+
+### Inputs
+
+ビットコインのインプットは、前のトランザクションのアウトプット。インプットは自分の所有するビットコインを示す。
+
+各インプットには以下が含まれる。
+
+* 前に受け取ったビットコインへの参照
+* 支払う本人のビットコインであるという証明
+  * ECDSAを用いる
+
+インプットは複数あることもある。インプット数は varint(可変長整数)で表現する。
+
+* [可変長数値表現 - Wikipedia](https://ja.wikipedia.org/wiki/%E5%8F%AF%E5%A4%89%E9%95%B7%E6%95%B0%E5%80%A4%E8%A1%A8%E7%8F%BE)
+* [Variable-length quantity - Wikipedia](https://en.wikipedia.org/wiki/Variable-length_quantity)
+
+インプットの各フィールド
+
+* Previous transaction ID
+  * 前のトランザクションのhash256
+  * 32 byte, リトルエンディアン
+* Previous transaction index
+  * どのアウトプットで支払うかを示すインデックス
+  * 4 byte, リトルエンディアン
+* ScriptSig
+  * varint
+  * 6章で詳しく取り上げる
+* Sequence
+  * 高頻度トレードで使いたかったみたい
+  * よくわからない
+
+### Outputs
+
+ビットコインの送信先を定義する。トランザクションは1つ以上のアウトプットを持つ。
+
+アウトプットには2つのフィールドがある
+
+* amount
+  * satoshi単位のビットコインのamount
+  * 8 byte, リトルエンディアンでシリアライズ
+* ScriptPubKey
+  * varint
+
+### Locktime
+
+特区タイムはトランザクションを遅延させる方法。
+
+ロックタイムが 500,000,000 以上の場合、Unixタイムスタンプ。未満の場合はブロックナンバー。
+指定されたUnix時間 or ブロックの高さに到達するまで署名はできるけど、支払いには使えない。
+
+* シリアライズされた 4byte のリトルエンディアン
+
+よくわからない
+
+### トランザクション手数料
+
+インプットの合計から、アウトプットの合計を引いた額
+
+インプットにはamountがないので、探さなくてはいけない。UTXO(unspent transaction output)セットへのアクセスが必要になる。
