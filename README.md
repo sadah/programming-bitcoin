@@ -45,8 +45,12 @@ The original is [here](https://github.com/jimmysong/programmingbitcoin)
   - [6章: Script](#6章-script)
     - [Scriptの仕組み](#scriptの仕組み)
     - [Scriptの動作](#scriptの動作)
+      - [OP_DUP](#op_dup)
+      - [OP_HASH160](#op_hash160)
+      - [OP_CHECKSIG](#op_checksig)
     - [スクリプトフィールドの連結](#スクリプトフィールドの連結)
     - [標準スクリプト](#標準スクリプト)
+    - [スタックエレメントの詳細](#スタックエレメントの詳細)
 
 ## 1章: 有限体
 
@@ -819,8 +823,6 @@ Scriptはチューリング完全ではなく、ループ処理はない。
 
 ロックボックスはScriptSigフィールドでアンロックできる。
 
-
-
 ### Scriptの動作
 
 * Scriptは一度に1つのコマンドを実行する
@@ -830,6 +832,20 @@ Scriptはチューリング完全ではなく、ループ処理はない。
 エレメントとはデータのことで、典型的なエレメントはDER署名やSEC公開鍵など。技術的にはエレメントを処理することは、そのエレメントをスタックにプッシュすることを指す。
 
 オペレーションはデータに対し何らかの操作をする。
+
+![OP_DUP](./programmingbitcoin/images/prbc_0602.png)
+
+#### OP_DUP
+
+スタックの先頭にエレメントを複製し、新しく生成したエレメントをスタックにプッシュする。
+
+#### OP_HASH160
+
+スタックの先頭要素に sha256, ripemd160 の順にハッシュ関数を適用し、生成された新たなエレメントをスタックにプッシュする。
+
+#### OP_CHECKSIG
+
+OP_CHECKSIGはスタックからpubkeyとsignatureをポップし、その署名が有効か確認する。有効な場合は1を、無効な場合は0をスタックにプッシュする
 
 ### スクリプトフィールドの連結
 
@@ -841,6 +857,8 @@ Scriptオブジェクトは評価が必要なコマンドのセットを表す�
 
 * ロックボックスはビットコインを受け取るトランザクションに
 * アンロックするスクリプトはビットコインを支払うトランザクションに
+
+![OP_DUP](./programmingbitcoin/images/prbc_0606.png)
 
 ScriptSigがScriptPubKeyをアンロックするので、連結する必要がある。
 
@@ -855,3 +873,7 @@ ScriptSigとScriptPubKeyからコマンドを取り出し、両者を連結す�
 * p2sh: Pay-to-script-hash
 * p2wpkh: Pay-to-witness-pubkey-hash
 * p2wsh: Pay-to-witness-script-hash
+
+### スタックエレメントの詳細
+
+スタックエレメントは0や1などの数字の場合もあれば、DER署名、SEC公開鍵などの場合もあるが、内部的にはすべてバイトになる。特定のオプコード向け数値と解釈されるものもある。
