@@ -86,7 +86,7 @@ The original is [here](https://github.com/jimmysong/programmingbitcoin)
     - [ブルームフィルターとは](#ブルームフィルターとは)
     - [BIP0037 ブルームフィルター](#bip0037-ブルームフィルター)
     - [ブルームフィルターの読み込み](#ブルームフィルターの読み込み)
-    - [マークるブロックの取得](#マークるブロックの取得)
+    - [マークルブロックの取得](#マークルブロックの取得)
     - [対象トランザクションの取得](#対象トランザクションの取得)
   - [13章: Segwit](#13章-segwit)
     - [Pay-to-Witness-Pubkey-Hash (p2wpkh)](#pay-to-witness-pubkey-hash-p2wpkh)
@@ -1233,7 +1233,7 @@ merkleblockコマンドは、対象のトランザクションがマークルツ
 
 * https://en.bitcoin.it/wiki/Protocol_documentation#filterload.2C_filteradd.2C_filterclear.2C_merkleblock
 
-### マークるブロックの取得
+### マークルブロックの取得
 
 軽量クライアントがフルノードからもらいたいデータのタイプはフィルター済みブロック。マークるブロック形式でブルームフィルターを通過するトランザクションを要求する。つまり軽量クライアントは対象のトランザクションがブルームフィルターに一致するマークるブロックを要求できる。
 
