@@ -90,8 +90,9 @@ The original is [here](https://github.com/jimmysong/programmingbitcoin)
     - [対象トランザクションの取得](#対象トランザクションの取得)
   - [13章: Segwit](#13章-segwit)
     - [Pay-to-Witness-Pubkey-Hash (p2wpkh)](#pay-to-witness-pubkey-hash-p2wpkh)
-    - [p2wpkh Transactions](#p2wpkh-transactions)
     - [p2sh-p2wpkh](#p2sh-p2wpkh)
+    - [Pay-to-Witness-Script-Hash (p2wsh)](#pay-to-witness-script-hash-p2wsh)
+    - [p2sh-p2wsh](#p2sh-p2wsh)
   - [14章: 応用トピックと次のステップ](#14章-応用トピックと次のステップ)
 
 ## 1章: 有限体
@@ -1262,15 +1263,44 @@ p2pkhからの主な変更点は、ScriptSigのデータがwitnessフィール�
 
 署名を無効にすることなく操作できるフィールドはScriptSigフィールド。ScriptSigは署名ハッシュを作成する前に空にされるため、署名を無効にすることなく変更できる。
 
-トランザクションがブロックチェーンにはいるとトランザクションＩＤは固定される。しかしLightning Networkの基本単位となるペイメントチャネルでは、ファンドトランザクションがブロックチェーンに追加されるより前に作成される従属するトランザクションが存在する。
+トランザクションがブロックチェーンにはいるとトランザクションIDは固定される。しかしLightning Networkの基本単位となるペイメントチャネルでは、ファンドトランザクションがブロックチェーンに追加されるより前に作成される従属するトランザクションが存在する。
 
 トランザクションのマリアビリティはScriptSigフィールドを空にして、IDの計算に使用されない別のフィールド、witnessフィールドにデータを配置することで修正される。
 
-### p2wpkh Transactions
-
 ![p2wpkh Transactions](./programmingbitcoin/images/prbc_1302.png)
+
+p2wpkh TransactionsにはSegwit marker、Segwit flag、witnessなどが追加されている。
+
+ScriptSigは空で、ScriptPubKeyはOP_Oと20バイトのハッシュ。
+
+OP_Oと20バイトのハッシュの場合、特別なルールが発動する。これは古いノードの場合も有効なスクリプトとみなされる。このシーケンスが検出されるとwitnessフィールドを読み込む。
+
+![p2wpkh Transactions](./programmingbitcoin/images/prbc_1307.png)
+
+p2wpkhの残りの処理はp2pkhの処理と同じで、署名が有効な場合はスタックに1が残った状態となる。
+
+これはSegwitバージョン0の特別なルールで、バージョン1は完全に異なる処理パスを持つことができる。
 
 ### p2sh-p2wpkh
 
+p2wpkhは優れているが、古いウォレットはp2wpkhのScriptPubKeyに送金できない。Segwitの広報互換性を保つため、p2shでp2wpkをラップして対応している。
+
+### Pay-to-Witness-Script-Hash (p2wsh)
+
+p2wpkhは主要なユースケースに対応するが、より複雑なスクリプトを利用したい場合、柔軟性の高いものが必要になる。
+
+![p2wsh Transactions](./programmingbitcoin/images/prbc_1321.png)
+
+p2wpkhと同様に特別なシーケンスを認識するとwitnessフィールドを参照する。
+
+![p2wsh Transactions](./programmingbitcoin/images/prbc_1326.png)
+
+witnessの最後の項目はWitnessScriptと呼ばれる。WitnessScriptのsha256が、ScriptPubKeyの32バイトのハッシュと一致すると、スクリプトコマンドとして解釈される。
+
+### p2sh-p2wsh
+
+p2sh-p2wpkhと同様に後方互換性をもたせる。
 
 ## 14章: 応用トピックと次のステップ
+
+ウォレット、階層的決定正ウォレット、ペイメントチャネルとLightning Networkなどについて学ぶと良い。テストネットのウォレットやブロックエクスプローラーなどを作ることもよいだろう。
